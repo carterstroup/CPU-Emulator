@@ -11,7 +11,7 @@ class Memory:
     # Method used to initialize memory bus, loops from 0 to Size of bus and converts iterator to binary string
     def init_memory_bus(self):
         for i in range(MEMORY_BUS_SIZE):
-            self.memory_bus['{0:08b}'.format(i)] = 0
+            self.memory_bus[i] = 0
 
     def search_memory_bus(self, address):
         if self.memory_bus.get(address) is not None:

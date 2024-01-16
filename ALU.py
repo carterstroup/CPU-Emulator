@@ -92,14 +92,3 @@ class ALU:
         if len(binary_str) > 1:
             return binary_str.lstrip('0')
         return binary_str
-    
-operand1 = "11111011010111101"
-operand2 = "10010100101010101"
-
-result_addition = ALU.add(operand1, operand2)
-result_subtraction = ALU.subtract(operand1, operand2)
-result_multiplication = ALU.multiply(operand1, operand2)
-
-print("Addition:", result_addition)
-print("Subtraction:", result_subtraction)
-print("Multiplication:", result_multiplication)

@@ -1,0 +1,12 @@
+FOR DATA INPUT: -> Memory Location (1-127),value in binary -> 78,1101 -> will store 1101 in memory slot 78
+
+FOR INSTRUCTIONS: -> opcode list
+Adding -> ADD -> opcode,register to store in (1-7),register for addend 1,register for addend 2 -> ADD,R3,R5,R6 -> will add register 5 and register six and will store the result in register 3
+Adding a constant -> ADDI -> opcode,register to store in (1-7),register for addend 1,constant for addend 2 (must be in binary) -> ADDI,R3,R5,110101 -> will add register 5 and constant 110101 and will store the result in register 3
+Flush the cache -> CACHE -> opcode,1 will flush cache -> CACHE,1 -> flushes the cache
+Skip instructions -> J -> opcode,line to jump to -> J,8 -> will jump to line 8 of instructions
+Load from memory -> LW -> opcode,memory location to load from,register to load to (1-7) -> LW,6,R5 -> will load memory location 6 into register 5
+Save to memory -> SW -> opcode,memory location to store to (0-127),register to save into memory (1-7) -> SW,65,R4 -> saves the value in register 4 to memory slot 65
+Multiply two values -> MULT -> opcode,register to store in (1-7),register for factor 1,register for factor 2 -> MULT,R3,R5,R6 -> will multiply register 5 and register six and will store the result in register 3
+Subtract two values -> SUB -> opcode,register to store in (1-7),register for minuend,register for subtrahend -> SUB,R3,R5,R6 -> will subtract register 5 from register six and will store the result in register 3
+Print the value of a register -> PNT -> opcode,register to print -> PNT,R6 -> will print register 6 to the console
