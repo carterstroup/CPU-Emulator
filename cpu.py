@@ -1,5 +1,6 @@
 from cache import Cache
 from memory import Memory
+from ALU import ALU as alu
 
 CPU_COUNTER_INIT_VALUE = 0
 NUMBER_OF_REGISTERS = 9
@@ -78,12 +79,16 @@ class CPU:
         self.cpu_counter = int(target)
 
     def add_instruction(self, destination, source, target):
-        self.registers[convert_register_to_index(destination)] = self.registers[convert_register_to_index(source)] + \
-                                                                 self.registers[convert_register_to_index(target)]
+        self.registers[convert_register_to_index(destination)] = alu.add(self.registers[convert_register_to_index(source)], self.registers[convert_register_to_index(target)])
+    
+    def mult_instruction(self, destination, source, target):
+        self.registers[convert_register_to_index(destination)] = alu.multiply(self.registers[convert_register_to_index(source)], self.registers[convert_register_to_index(target)])
+        
+    def subt_instruction(self, destination, source, target):
+        self.registers[convert_register_to_index(destination)] = alu.subtract(self.registers[convert_register_to_index(source)], self.registers[convert_register_to_index(target)])
 
     def add_i_instruction(self, destination, source, immediate):
-        self.registers[convert_register_to_index(destination)] = self.registers[convert_register_to_index(source)] + \
-                                                                 int(immediate)
+        self.registers[convert_register_to_index(destination)] = alu.add(self.registers[convert_register_to_index(source)], int(immediate))
 
     # Method to implement cache instruction. 0 = OFF, 1 = ON, 2 = Flush Cache
     def cache_instruction(self, value):
@@ -110,7 +115,11 @@ class CPU:
     def load_word(self, m_address, r_address):
         value = self.get_memory(m_address)
         self.registers[convert_register_to_index(r_address)] = value
-        
+    
+    def save_word(self, m_address, r_address):
+        self.cache.write_cache(m_address, self.registers[convert_register_to_index(r_address)])
+        self.memory_bus.write_memory_bus(m_address, self.registers[convert_register_to_index(r_address)])
+     
     #TO DO
     #create save word
     #assign helper functions to actually run with inputs
@@ -136,3 +145,11 @@ class CPU:
             self.jump_instruction(instruction_parsed[1])
         if instruction_parsed[0] == CACHE_INSTRUCTION_OPERATOR:
             self.cache_instruction(instruction_parsed[1])
+        if instruction_parsed[0] == LOAD_WORD_INSTRUCTION_OPERATOR:
+            self.load_word(instruction_parsed[1], instruction_parsed[2])
+        if instruction_parsed[0] == SAVE_WORD_INSTRUCTION_OPERATOR:
+            self.save_word(instruction_parsed[1], instruction_parsed[2])
+        if instruction_parsed[0] == SUBTRACT_INSTRUCTION_OPERATOR:
+            self.mult_instruction(instruction_parsed[1], instruction_parsed[2], instruction_parsed[3])
+        if instruction_parsed[0] == MULTIPLY_INSTRUCTION_OPERATOR:
+            self.subt_instruction(instruction_parsed[1], instruction_parsed[2], instruction_parsed[3])

@@ -51,27 +51,21 @@ class ALU:
         return ALU.remove_leading_zeros(result)
 
     def subtract(a, b):
-        # Ensure both binary strings have the same length
+        result = ""
+        borrow = '0'
         max_len = max(len(a), len(b))
+
+        # Zero-pad the shorter operand
         a = a.zfill(max_len)
         b = b.zfill(max_len)
 
-        result = ""
-        borrow = 0
-
         for bit_a, bit_b in zip(reversed(a), reversed(b)):
-            # Convert bits to integers
-            int_a = int(bit_a)
-            int_b = int(bit_b)
-
-            # Perform subtraction with borrow
-            diff = (int_a - int_b - borrow) % 2
-
-            # Update borrow for the next iteration
-            borrow = (int_a - int_b - borrow < 0)
-
-            # Convert the result bit back to a string
-            result = str(diff) + result
+            
+            diff = XORGate.execute(XORGate.execute(bit_a, bit_b), borrow)
+            borrow= ORGate.execute(ORGate.execute(ANDGate.execute(NOTGate.execute(bit_a), bit_b),
+                                                    ANDGate.execute(NOTGate.execute(bit_a), borrow)),
+                                        ANDGate.execute(bit_b, borrow))
+            result = diff + result
 
         # Trim leading zeros
         result = result.lstrip('0') or '0'
@@ -95,10 +89,12 @@ class ALU:
         return ALU.remove_leading_zeros(result)
     
     def remove_leading_zeros(binary_str):
-        return binary_str.lstrip('0')
+        if len(binary_str) > 1:
+            return binary_str.lstrip('0')
+        return binary_str
     
-operand1 = "101010"
-operand2 = "1100"
+operand1 = "11111011010111101"
+operand2 = "10010100101010101"
 
 result_addition = ALU.add(operand1, operand2)
 result_subtraction = ALU.subtract(operand1, operand2)
