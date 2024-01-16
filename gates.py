@@ -42,7 +42,7 @@ class ALU:
 
         for bit_a, bit_b in zip(reversed(a), reversed(b)):
             sum_bit = XORGate.execute(XORGate.execute(bit_a, bit_b), carry)
-            carry = ORGate.execute(ANDGate.execute(bit_a, bit_b), ANDGate.execute(XORGate.execute(bit_a, bit_b), carry))
+            carry = ORGate.execute(ANDGate.execute(bit_a, bit_b), ORGate.execute(ANDGate.execute(XORGate.execute(bit_a, bit_b), carry), ANDGate.execute(bit_a, carry)))
             result = sum_bit + result
 
         if carry == '1':
@@ -51,20 +51,32 @@ class ALU:
         return ALU.remove_leading_zeros(result)
 
     def subtract(a, b):
-        result = ""
-        borrow = '0'
+        # Ensure both binary strings have the same length
         max_len = max(len(a), len(b))
-
-        # Zero-pad the shorter operand
         a = a.zfill(max_len)
         b = b.zfill(max_len)
 
-        for bit_a, bit_b in zip(a, b):
-            diff = XORGate.execute(XORGate.execute(bit_a, bit_b), borrow)
-            borrow = ORGate.execute(ANDGate.execute(NOTGate.execute(bit_a), bit_b), ORGate.execute(ANDGate.execute(XORGate.execute(bit_a, bit_b), borrow), ANDGate.execute(bit_a, borrow)))
-            result += diff
+        result = ""
+        borrow = 0
 
-        return ALU.remove_leading_zeros(result)
+        for bit_a, bit_b in zip(reversed(a), reversed(b)):
+            # Convert bits to integers
+            int_a = int(bit_a)
+            int_b = int(bit_b)
+
+            # Perform subtraction with borrow
+            diff = (int_a - int_b - borrow) % 2
+
+            # Update borrow for the next iteration
+            borrow = (int_a - int_b - borrow < 0)
+
+            # Convert the result bit back to a string
+            result = str(diff) + result
+
+        # Trim leading zeros
+        result = result.lstrip('0') or '0'
+
+        return result
 
     def multiply(a, b):
         result = '0'
@@ -81,25 +93,6 @@ class ALU:
             a = a + '0'  # Shift 'a' to the left
 
         return ALU.remove_leading_zeros(result)
-
-    def divide(a, b):
-        quotient = '0'
-        remainder = a
-        max_len = max(len(a), len(b))
-
-        # Zero-pad the shorter operand
-        a = a.zfill(max_len)
-        b = b.zfill(max_len)
-
-        while len(remainder) >= len(b):
-            if remainder[0] == '1':
-                quotient = ALU.add(quotient, '1')
-                remainder = ALU.subtract(remainder, b)
-            else:
-                quotient = quotient + '0'
-            remainder = remainder[1:]
-
-        return ALU.remove_leading_zeros(quotient)
     
     def remove_leading_zeros(binary_str):
         return binary_str.lstrip('0')
@@ -110,9 +103,7 @@ operand2 = "1100"
 result_addition = ALU.add(operand1, operand2)
 result_subtraction = ALU.subtract(operand1, operand2)
 result_multiplication = ALU.multiply(operand1, operand2)
-result_division = ALU.divide(operand1, operand2)
 
 print("Addition:", result_addition)
 print("Subtraction:", result_subtraction)
 print("Multiplication:", result_multiplication)
-print("Division:", result_division)

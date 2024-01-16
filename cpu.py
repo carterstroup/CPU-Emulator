@@ -10,7 +10,6 @@ JUMP_INSTRUCTION_OPERATOR = "J"
 CACHE_INSTRUCTION_OPERATOR = "CACHE"
 LOAD_WORD_INSTRUCTION_OPERATOR = "LW"
 SAVE_WORD_INSTRUCTION_OPERATOR = "SW"
-DIVIDE_INSTRUCTION_OPERATOR = "DIV"
 MULTIPLY_INSTRUCTION_OPERATOR = "MULT"
 SUBTRACT_INSTRUCTION_OPERATOR = "SUB"
 
@@ -94,6 +93,30 @@ class CPU:
             self.set_cache_flag(True)
         if value == CACHE_FLUSH_VALUE:
             self.flush_cache()
+      
+    #checks to see if data in cache, if so it returns the value from the cache, if not, it gets the memory from the bus, stores it in the cache, and then returns from the bus
+    def get_memory(self, m_address):
+        value = None
+        if self.cache.search_cache(m_address) != None:
+            value = self.cache.search_cache(m_address)
+        elif self.memory_bus.search_memory_bus(m_address) != None:
+            value = self.memory_bus.search_memory_bus(m_address)
+            self.cache.write_cache(m_address, value)
+        else:
+            return None
+        return value
+    
+    #helper function LW, gets the value from get_memory then assigns it to the register
+    def load_word(self, m_address, r_address):
+        value = self.get_memory(m_address)
+        self.registers[convert_register_to_index(r_address)] = value
+        
+    #TO DO
+    #create save word
+    #assign helper functions to actually run with inputs
+    #get subtraction working with logic gates
+    #test a bunch -> comment all the code and understand it
+    #publish
 
     # --- Add implementations for further instructions below ---
 
