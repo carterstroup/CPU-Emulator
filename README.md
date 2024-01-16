@@ -7,7 +7,7 @@
 
 - Emulates essential CPU and computer functions including Cache, Memory Busses, Control Unit, and a Arithmetic Logic Unit.
 - Performs multiple types of binary calculations using nothing more than emulated logic gates in the ALU.
-- Uses a modified MIPS Assembly language (see syntax_instructions.txt).
+- Uses a modified MIPS Assembly language ([see Syntax Instructions](https://github.com/carterstroup/cpu/blob/main/Syntax%20Instructions.md)).
 - Provides nine essential CPU opcodes/functions.
 - Simulates a realistic memory storage structure using a FIFO cache replacement policy and a write-through memory policy.
 
@@ -23,7 +23,7 @@ To run the program, simply follow the steps below in your terminal.
 
 2. **Run the Application:**
     ```bash
-    cd cpu
+    cd Emulator
     python main.py
     ```
 
@@ -35,7 +35,7 @@ At the heart of this program is the CPU, which is composed of eight registers, a
 
 In addition to the CPU, the program also uses a simulated cache and memory bus. The cache (16 blocks) uses a FIFO replacement policy and a write-through memory storage policy. The cache is simulated using a dequeue while the memory is replicated via a dictionary. 
 
-These processes can be utilized with a modified version of MIPS assembly via a text file (See Syntax Instructions for valid functions and syntax). You can also load in data using a text file with another simple syntax, which you can find in the same file. The total operations that can be completed are load word, save word, flush cache, multiply, subtract, add, add with constant, skip, and print. In all, the program runs in linear time across five scripts and shows strong proficiency in the knowledge of computer architecture and object-oriented programming. 
+These processes can be utilized with a modified version of MIPS assembly via a text file ([See Syntax Instructions](https://github.com/carterstroup/cpu/blob/main/Syntax%20Instructions.md) for valid functions and syntax). You can also load in data using a text file with another simple syntax, which you can find in the same file. The total operations that can be completed are load word, save word, flush cache, multiply, subtract, add, add with constant, skip, and print. In all, the program runs in linear time across five scripts and shows strong proficiency in the knowledge of computer architecture and object-oriented programming. 
 
 **First Functional Date:** January 16, 2024
 
