@@ -2,11 +2,11 @@
 
 ## Assembly Information
 
-Below you will find a list of function supported by the emulator and their Assembly syntax.
+This CPU Emulator uses a unique Assembly-like ISA. You can code different functions using the data_input.txt file. Below you will find a list of function supported by the emulator and their Assembly syntax. 
 
 ### Add
 
-This function will add two registers together and store the result in a seperate register.
+This function will add two registers together and store the result in a separate register.
 
 `ADD,STORAGE REGISTER,ADDENED1,ADDEND2`
 

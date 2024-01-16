@@ -39,7 +39,7 @@ def send_instructions_to_cpu(cpu):
 # Start of Python script to run the CPU simulator
 my_cpu = CPU()
 print("---------------------------------------------------")
-print("Welcome to the Python CPU Simulator!")
+print("Welcome to the Python CPU Emulator!")
 print("---------------------------------------------------")
 print("Initializing Memory Bus from data input file...")
 initialize_memory_bus(my_cpu)

@@ -1,6 +1,6 @@
 from cache import Cache
 from memory import Memory
-from ALU import ALU as alu
+from alu import ALU as alu
 
 CPU_COUNTER_INIT_VALUE = 0
 NUMBER_OF_REGISTERS = 9
@@ -15,7 +15,6 @@ MULTIPLY_INSTRUCTION_OPERATOR = "MULT"
 SUBTRACT_INSTRUCTION_OPERATOR = "SUB"
 PRINT_INSTRUCTION_OPERATOR = "PNT"
 
-CACHE_OFF_VALUE = 0
 CACHE_FLUSH_VALUE = 1
 
 
@@ -27,7 +26,6 @@ def convert_register_to_index(value):
 # CPU class to implement the bulk of CPU Simulator requirements. Member properties include:
 # CPU Counter - Int representing the number of the instruction being parsed
 # Registers - List used to represent internal registers used by the CPU
-# Cache Flag - boolean representing whether or not the cache is to be used
 # Cache - instance of Cache object instantiated for CPU
 # Memory Bus - instance of Memory Bus object instantiated for CPU
 class CPU:
@@ -38,6 +36,7 @@ class CPU:
         self.cache = Cache()
         self.memory_bus = Memory()
 
+    #The CPU counter counts which instruction we are on.
     def increment_cpu_counter(self):
         self.cpu_counter += 1
 
@@ -54,9 +53,6 @@ class CPU:
         for i in range(len(self.registers)):
             self.registers[i] = 0
 
-    def set_cache_flag(self, value):
-        self.cache_flag = value
-
     def flush_cache(self):
         self.cache.flush_cache()
 
@@ -69,35 +65,45 @@ class CPU:
     def search_memory_bus(self, address):
         return self.memory_bus.search_memory_bus(address)
 
+    #The key in the dict representing the memory bus is an integer, which is why int() is used.
     def write_memory_bus(self, address, value):
         self.memory_bus.write_memory_bus(int(address), value)
 
-    # --- Sample implementations for ADD, ADDI, J, and Cache instructions ---
-
+    #Jumps to the line of instructions provided.
     def jump_instruction(self, target):
         self.cpu_counter = int(target)
 
+    #The next four functions use the ALU. The ALU processes the binary via a string, which is why str() is called. 
+    
+    #Adds two registers together.
     def add_instruction(self, destination, source, target):
         self.registers[convert_register_to_index(destination)] = alu.add(str(self.registers[convert_register_to_index(source)]), str(self.registers[convert_register_to_index(target)]))
     
+    #Multiplies two registers together.
     def mult_instruction(self, destination, source, target):
         self.registers[convert_register_to_index(destination)] = alu.multiply(str(self.registers[convert_register_to_index(source)]), str(self.registers[convert_register_to_index(target)]))
-        
+    
+    #Subtracts two registers. 
     def subt_instruction(self, destination, source, target):
         self.registers[convert_register_to_index(destination)] = alu.subtract(str(self.registers[convert_register_to_index(source)]), str(self.registers[convert_register_to_index(target)]))
 
+    #Adds to a constant.
     def add_i_instruction(self, destination, source, immediate):
         self.registers[convert_register_to_index(destination)] = alu.add(str(self.registers[convert_register_to_index(source)]), str(int(immediate)))
 
-    # Method to implement cache instruction. 0 = OFF, 1 = ON, 2 = Flush Cache
+    # Method to implement cache flush if called.
     def cache_instruction(self, value):
         if value == CACHE_FLUSH_VALUE:
             self.flush_cache()
-            
+    
+    #Prints a current register's data.   
     def print_instruction(self,idx):
         print(self.registers[convert_register_to_index(idx)])
       
-    #checks to see if data in cache, if so it returns the value from the cache, if not, it gets the memory from the bus, stores it in the cache, and then returns from the bus
+    #Checks to see if the wanted data is in the cache. 
+    #If so, it returns the value from the cache. 
+    #If not, it gets the value from the memory bus.
+    #It then stores it in the cache, and then returns the value from the memory bus.
     def get_memory(self, m_address):
         value = None
         if self.cache.search_cache(int(m_address)) != None:
@@ -109,22 +115,15 @@ class CPU:
             return None
         return value
     
-    #helper function LW, gets the value from get_memory then assigns it to the register
+    #Loads values from the memory bus.
     def load_word(self, m_address, r_address):
         value = self.get_memory(int(m_address))
         self.registers[convert_register_to_index(r_address)] = value
     
+    #Saves a register's data to memory.
     def save_word(self, m_address, r_address):
         self.cache.write_cache(m_address, self.registers[convert_register_to_index(r_address)])
         self.memory_bus.write_memory_bus(int(m_address), self.registers[convert_register_to_index(r_address)])
-     
-
-    #test a bunch -> comment all the code and understand it
-    #publish
-
-    # --- Add implementations for further instructions below ---
-
-    # --------------------------------------------------------- #
 
     # Main parser method used to interpret instructions from input file.
     # Check value of operator and call subsequent helper function
