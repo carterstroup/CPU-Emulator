@@ -42,13 +42,14 @@ class ALU:
 
         for bit_a, bit_b in zip(reversed(a), reversed(b)):
             sum_bit = XORGate.execute(XORGate.execute(bit_a, bit_b), carry)
-            carry = ORGate.execute(ANDGate.execute(bit_a, bit_b), ORGate.execute(ANDGate.execute(XORGate.execute(bit_a, bit_b), carry), ANDGate.execute(bit_a, carry)))
+            carry = ORGate.execute(ANDGate.execute(bit_a, bit_b), ANDGate.execute(XORGate.execute(bit_a, bit_b), carry))
             result = sum_bit + result
 
         if carry == '1':
             result = carry + result
 
         return ALU.remove_leading_zeros(result)
+
 
     def subtract(a, b):
         result = ""
@@ -71,7 +72,7 @@ class ALU:
         result = result.lstrip('0') or '0'
 
         return result
-
+    
     def multiply(a, b):
         result = '0'
         max_len = max(len(a), len(b))
@@ -89,6 +90,4 @@ class ALU:
         return ALU.remove_leading_zeros(result)
     
     def remove_leading_zeros(binary_str):
-        if len(binary_str) > 1:
-            return binary_str.lstrip('0')
-        return binary_str
+        return binary_str.lstrip('0')

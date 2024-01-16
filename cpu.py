@@ -95,7 +95,6 @@ class CPU:
             self.flush_cache()
             
     def print_instruction(self,idx):
-        print(self.cache.cache)
         print(self.registers[convert_register_to_index(idx)])
       
     #checks to see if data in cache, if so it returns the value from the cache, if not, it gets the memory from the bus, stores it in the cache, and then returns from the bus
@@ -119,10 +118,7 @@ class CPU:
         self.cache.write_cache(m_address, self.registers[convert_register_to_index(r_address)])
         self.memory_bus.write_memory_bus(int(m_address), self.registers[convert_register_to_index(r_address)])
      
-    #TO DO
-    #create save word
-    #assign helper functions to actually run with inputs
-    #get subtraction working with logic gates
+
     #test a bunch -> comment all the code and understand it
     #publish
 
@@ -149,8 +145,8 @@ class CPU:
         if instruction_parsed[0] == SAVE_WORD_INSTRUCTION_OPERATOR:
             self.save_word(instruction_parsed[1], instruction_parsed[2])
         if instruction_parsed[0] == SUBTRACT_INSTRUCTION_OPERATOR:
-            self.mult_instruction(instruction_parsed[1], instruction_parsed[2], instruction_parsed[3])
-        if instruction_parsed[0] == MULTIPLY_INSTRUCTION_OPERATOR:
             self.subt_instruction(instruction_parsed[1], instruction_parsed[2], instruction_parsed[3])
+        if instruction_parsed[0] == MULTIPLY_INSTRUCTION_OPERATOR:
+            self.mult_instruction(instruction_parsed[1], instruction_parsed[2], instruction_parsed[3])
         if instruction_parsed[0] == PRINT_INSTRUCTION_OPERATOR:
             self.print_instruction(instruction_parsed[1])
