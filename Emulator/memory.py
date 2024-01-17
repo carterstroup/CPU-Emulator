@@ -21,3 +21,14 @@ class Memory:
     def write_memory_bus(self, address, value):
         if self.memory_bus.get(address) is not None:
             self.memory_bus[address] = value
+            
+            
+            
+#TO DO:
+#Check to see if we can convert from int to str everywhere to eliminate need to convert.
+#Need to test to see which is subtracted from which.
+#Need to make default data input and instruction input more robust
+#Need to make sure to fully understand alu and comment accordingly
+#need to unit test
+#remove DS_Store and final checks 
+#Publish

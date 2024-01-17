@@ -56,11 +56,11 @@ class CPU:
     def flush_cache(self):
         self.cache.flush_cache()
 
-    def search_cache(self, address):
-        return self.cache.search_cache(address)
+    def search_cache(self, memory_address):
+        return self.cache.search_cache(memory_address)
 
-    def write_cache(self, address, value):
-        self.cache.write_cache(address, value)
+    def write_cache(self, memory_address, value):
+        self.cache.write_cache(memory_address, value)
 
     def search_memory_bus(self, address):
         return self.memory_bus.search_memory_bus(address)
@@ -76,20 +76,20 @@ class CPU:
     #The next four functions use the ALU. The ALU processes the binary via a string, which is why str() is called. 
     
     #Adds two registers together.
-    def add_instruction(self, destination, source, target):
-        self.registers[convert_register_to_index(destination)] = alu.add(str(self.registers[convert_register_to_index(source)]), str(self.registers[convert_register_to_index(target)]))
+    def add_instruction(self, destination, ad1, ad2):
+        self.registers[convert_register_to_index(destination)] = alu.add(str(self.registers[convert_register_to_index(ad1)]), str(self.registers[convert_register_to_index(ad2)]))
     
     #Multiplies two registers together.
-    def mult_instruction(self, destination, source, target):
-        self.registers[convert_register_to_index(destination)] = alu.multiply(str(self.registers[convert_register_to_index(source)]), str(self.registers[convert_register_to_index(target)]))
+    def mult_instruction(self, destination, fctr1, fctr2):
+        self.registers[convert_register_to_index(destination)] = alu.multiply(str(self.registers[convert_register_to_index(fctr1)]), str(self.registers[convert_register_to_index(fctr2)]))
     
     #Subtracts two registers. 
     def subt_instruction(self, destination, source, target):
         self.registers[convert_register_to_index(destination)] = alu.subtract(str(self.registers[convert_register_to_index(source)]), str(self.registers[convert_register_to_index(target)]))
 
     #Adds to a constant.
-    def add_i_instruction(self, destination, source, immediate):
-        self.registers[convert_register_to_index(destination)] = alu.add(str(self.registers[convert_register_to_index(source)]), str(int(immediate)))
+    def add_i_instruction(self, destination, ad1, const):
+        self.registers[convert_register_to_index(destination)] = alu.add(str(self.registers[convert_register_to_index(ad1)]), str(int(const)))
 
     # Method to implement cache flush if called.
     def cache_instruction(self, value):
@@ -97,8 +97,8 @@ class CPU:
             self.flush_cache()
     
     #Prints a current register's data.   
-    def print_instruction(self,idx):
-        print(self.registers[convert_register_to_index(idx)])
+    def print_instruction(self,reg):
+        print(self.registers[convert_register_to_index(reg)])
       
     #Checks to see if the wanted data is in the cache. 
     #If so, it returns the value from the cache. 
