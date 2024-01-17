@@ -71,7 +71,23 @@ class ALU:
     def subtract(a, b):
         result = ""
         borrow = '0'
+        check_a = []
+        check_b = []
         max_len = max(len(a), len(b))
+        
+        #Ensures the minuend is larger than the subtrahend.
+        #The logic in this emulator only handles non-negative values.
+        if len(ALU.remove_leading_zeros(a)) < len(ALU.remove_leading_zeros(b)):
+            return "0"
+        
+        for i in a:
+            check_a.append(int(i))
+            
+        for i in b:
+            check_b.append(int(i))
+            
+        if sum(check_a) < sum(check_b):
+            return "0"
 
         # Zero-pad the shorter operand
         a = a.zfill(max_len)

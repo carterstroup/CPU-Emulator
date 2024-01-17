@@ -21,11 +21,3 @@ class Memory:
     def write_memory_bus(self, address, value):
         if self.memory_bus.get(address) is not None:
             self.memory_bus[address] = value
-            
-            
-            
-#TO DO:
-#need to unit test
-#Need to make subtraction skip if number is less than
-#remove DS_Store and final checks 
-#Publish

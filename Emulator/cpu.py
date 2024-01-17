@@ -71,34 +71,67 @@ class CPU:
 
     #Jumps to the line of instructions provided.
     def jump_instruction(self, target):
-        self.cpu_counter = int(target)
-
-    #The next four functions use the ALU. The ALU processes the binary via a string, which is why str() is called. 
+        try:
+            self.cpu_counter = int(target)
+        except:
+            return
+    
+    #Validation Functions
+    
+    #Ensures input is binary.
+    def check_for_binary(self, bin_str):
+        if len(set(bin_str)) < 3:
+            return True
+        
+    #Ensures the requested register is valid.
+    def check_register(self, reg):
+        if reg[0] == "R" or reg[0] == "r":
+            if int(reg[1:]) > 0 and int(reg[1:]) <= 7:
+                return True
+    
+    #Ensures the memory address is valid.
+    def validate_memory_location(self, loc):
+        try:
+            if int(loc) <= 127 and int(loc) >= 0:
+                return True
+            else:
+                print("Instruction Error: Invalid Memory Location. Jumping to Next Instruction")
+                self.jump_instruction(self.cpu_counter + 1)
+                return
+        except:
+            return
     
     #Adds two registers together.
     def add_instruction(self, destination, ad1, ad2):
-        self.registers[convert_register_to_index(destination)] = alu.add(str(self.registers[convert_register_to_index(ad1)]), str(self.registers[convert_register_to_index(ad2)]))
+        if self.check_register(ad1) == True and self.check_register(ad2) == True:
+            self.registers[convert_register_to_index(destination)] = alu.add(str(self.registers[convert_register_to_index(ad1)]), str(self.registers[convert_register_to_index(ad2)]))
     
     #Multiplies two registers together.
     def mult_instruction(self, destination, fctr1, fctr2):
-        self.registers[convert_register_to_index(destination)] = alu.multiply(str(self.registers[convert_register_to_index(fctr1)]), str(self.registers[convert_register_to_index(fctr2)]))
+        if self.check_register(fctr1) == True and self.check_register(fctr2) == True:
+            self.registers[convert_register_to_index(destination)] = alu.multiply(str(self.registers[convert_register_to_index(fctr1)]), str(self.registers[convert_register_to_index(fctr2)]))
     
     #Subtracts two registers. It subtracts the second number from the first. AKA sub1 - sub2 = answer
     def subt_instruction(self, destination, sub1, sub2):
-        self.registers[convert_register_to_index(destination)] = alu.subtract(str(self.registers[convert_register_to_index(sub1)]), str(self.registers[convert_register_to_index(sub2)]))
+        if self.check_register(sub1) == True and self.check_register(sub2) == True:
+            self.registers[convert_register_to_index(destination)] = alu.subtract(str(self.registers[convert_register_to_index(sub1)]), str(self.registers[convert_register_to_index(sub2)]))
 
     #Adds to a constant.
     def add_i_instruction(self, destination, ad1, const):
-        self.registers[convert_register_to_index(destination)] = alu.add(str(self.registers[convert_register_to_index(ad1)]), str(int(const)))
+        if self.check_for_binary(const) == True and self.check_register(ad1) == True:
+            self.registers[convert_register_to_index(destination)] = alu.add(str(self.registers[convert_register_to_index(ad1)]), str(int(const)))
 
     # Method to implement cache flush if called.
     def cache_instruction(self, value):
-        if value == CACHE_FLUSH_VALUE:
-            self.flush_cache()
+        try:
+            if value == CACHE_FLUSH_VALUE:
+                self.flush_cache()
+        except:
+            return
     
     #Prints a current register's data.   
     def print_instruction(self,reg):
-        print(self.registers[convert_register_to_index(reg)])
+            print(self.registers[convert_register_to_index(reg)])
       
     #Checks to see if the wanted data is in the cache. 
     #If so, it returns the value from the cache. 
@@ -112,18 +145,24 @@ class CPU:
             value = self.memory_bus.search_memory_bus(m_address)
             self.cache.write_cache(m_address, value)
         else:
-            return None
+            return "0"
         return value
     
     #Loads values from the memory bus.
     def load_word(self, m_address, r_address):
-        value = self.get_memory(m_address)
-        self.registers[convert_register_to_index(r_address)] = value
+        try:
+            value = self.get_memory(m_address)
+            self.registers[convert_register_to_index(r_address)] = value
+        except:
+            return
     
     #Saves a register's data to memory.
     def save_word(self, m_address, r_address):
-        self.cache.write_cache(m_address, self.registers[convert_register_to_index(r_address)])
-        self.memory_bus.write_memory_bus(m_address, self.registers[convert_register_to_index(r_address)])
+        if self.check_register(r_address) == True and self.validate_memory_location(m_address) == True:
+            self.cache.write_cache(m_address, self.registers[convert_register_to_index(r_address)])
+            self.memory_bus.write_memory_bus(m_address, self.registers[convert_register_to_index(r_address)])
+
+
 
     # Main parser method used to interpret instructions from input file.
     # Check value of operator and call subsequent helper function
@@ -131,21 +170,40 @@ class CPU:
         instruction_parsed = instruction.split(",")
         print("Reading instruction: " + instruction)
         self.increment_cpu_counter()
-        if instruction_parsed[0] == ADD_INSTRUCTION_OPERATOR:
-            self.add_instruction(instruction_parsed[1], instruction_parsed[2], instruction_parsed[3])
-        if instruction_parsed[0] == ADD_I_INSTRUCTION_OPERATOR:
-            self.add_i_instruction(instruction_parsed[1], instruction_parsed[2], instruction_parsed[3])
+        if instruction_parsed[0] == PRINT_INSTRUCTION_OPERATOR:
+            if self.check_register(instruction_parsed[1]) == True:
+                self.print_instruction(instruction_parsed[1])
         if instruction_parsed[0] == JUMP_INSTRUCTION_OPERATOR:
             self.jump_instruction(instruction_parsed[1])
         if instruction_parsed[0] == CACHE_INSTRUCTION_OPERATOR:
             self.cache_instruction(instruction_parsed[1])
         if instruction_parsed[0] == LOAD_WORD_INSTRUCTION_OPERATOR:
-            self.load_word(instruction_parsed[1], instruction_parsed[2])
+            try:
+                self.load_word(instruction_parsed[1], instruction_parsed[2])
+            except:
+                return
         if instruction_parsed[0] == SAVE_WORD_INSTRUCTION_OPERATOR:
-            self.save_word(instruction_parsed[1], instruction_parsed[2])
+            try:
+                self.save_word(instruction_parsed[1], instruction_parsed[2])
+            except:
+                return
         if instruction_parsed[0] == SUBTRACT_INSTRUCTION_OPERATOR:
-            self.subt_instruction(instruction_parsed[1], instruction_parsed[2], instruction_parsed[3])
+            try:
+                self.subt_instruction(instruction_parsed[1], instruction_parsed[2], instruction_parsed[3])
+            except:
+                return
         if instruction_parsed[0] == MULTIPLY_INSTRUCTION_OPERATOR:
-            self.mult_instruction(instruction_parsed[1], instruction_parsed[2], instruction_parsed[3])
-        if instruction_parsed[0] == PRINT_INSTRUCTION_OPERATOR:
-            self.print_instruction(instruction_parsed[1])
+            try:
+                self.mult_instruction(instruction_parsed[1], instruction_parsed[2], instruction_parsed[3])
+            except:
+                return
+        if instruction_parsed[0] == ADD_INSTRUCTION_OPERATOR:
+            try:
+                self.add_instruction(instruction_parsed[1], instruction_parsed[2], instruction_parsed[3])
+            except:
+                return
+        if instruction_parsed[0] == ADD_I_INSTRUCTION_OPERATOR:
+            try:
+                self.add_i_instruction(instruction_parsed[1], instruction_parsed[2], instruction_parsed[3])
+            except:
+                return

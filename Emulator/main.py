@@ -26,7 +26,10 @@ def initialize_memory_bus(cpu):
     data_loaded = fetch_data()
     for data in data_loaded:
         data_parsed = data.split(",")
-        cpu.write_memory_bus(data_parsed[0], data_parsed[1])
+        if int(data_parsed[0]) >= 0 and int(data_parsed[0]) <= 127:
+            if len(set(data_parsed[1])) < 3:
+                cpu.write_memory_bus(data_parsed[0], data_parsed[1])
+
 
 
 # Method to send instructions line-by-line to CPU object
