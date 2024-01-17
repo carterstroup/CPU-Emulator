@@ -18,7 +18,7 @@ To run the program, simply follow the steps below in your terminal.
 1. **Clone the Repository:**
     ```bash
     git clone https://github.com/carterstroup/cpu.git
-    cd CPU
+    cd CPU-Emulator
     ```
 
 2. **Run the Application:**
