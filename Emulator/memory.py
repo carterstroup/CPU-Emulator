@@ -25,8 +25,6 @@ class Memory:
             
             
 #TO DO:
-#Need to make default data input and instruction input more robust
-#Need to make sure to fully understand alu and comment accordingly
 #need to unit test
 #Need to make subtraction skip if number is less than
 #remove DS_Store and final checks 
