@@ -67,7 +67,7 @@ class CPU:
 
     #The key in the dict representing the memory bus is an integer, which is why int() is used.
     def write_memory_bus(self, address, value):
-        self.memory_bus.write_memory_bus(int(address), value)
+        self.memory_bus.write_memory_bus(address, value)
 
     #Jumps to the line of instructions provided.
     def jump_instruction(self, target):
@@ -106,24 +106,24 @@ class CPU:
     #It then stores it in the cache, and then returns the value from the memory bus.
     def get_memory(self, m_address):
         value = None
-        if self.cache.search_cache(int(m_address)) != None:
-            value = self.cache.search_cache(int(m_address))
-        elif self.memory_bus.search_memory_bus(int(m_address)) != None:
-            value = self.memory_bus.search_memory_bus(int(m_address))
-            self.cache.write_cache(int(m_address), value)
+        if self.cache.search_cache(m_address) != None:
+            value = self.cache.search_cache(m_address)
+        elif self.memory_bus.search_memory_bus(m_address) != None:
+            value = self.memory_bus.search_memory_bus(m_address)
+            self.cache.write_cache(m_address, value)
         else:
             return None
         return value
     
     #Loads values from the memory bus.
     def load_word(self, m_address, r_address):
-        value = self.get_memory(int(m_address))
+        value = self.get_memory(m_address)
         self.registers[convert_register_to_index(r_address)] = value
     
     #Saves a register's data to memory.
     def save_word(self, m_address, r_address):
         self.cache.write_cache(m_address, self.registers[convert_register_to_index(r_address)])
-        self.memory_bus.write_memory_bus(int(m_address), self.registers[convert_register_to_index(r_address)])
+        self.memory_bus.write_memory_bus(m_address, self.registers[convert_register_to_index(r_address)])
 
     # Main parser method used to interpret instructions from input file.
     # Check value of operator and call subsequent helper function
