@@ -83,9 +83,9 @@ class CPU:
     def mult_instruction(self, destination, fctr1, fctr2):
         self.registers[convert_register_to_index(destination)] = alu.multiply(str(self.registers[convert_register_to_index(fctr1)]), str(self.registers[convert_register_to_index(fctr2)]))
     
-    #Subtracts two registers. 
-    def subt_instruction(self, destination, source, target):
-        self.registers[convert_register_to_index(destination)] = alu.subtract(str(self.registers[convert_register_to_index(source)]), str(self.registers[convert_register_to_index(target)]))
+    #Subtracts two registers. It subtracts the second number from the first. AKA sub1 - sub2 = answer
+    def subt_instruction(self, destination, sub1, sub2):
+        self.registers[convert_register_to_index(destination)] = alu.subtract(str(self.registers[convert_register_to_index(sub1)]), str(self.registers[convert_register_to_index(sub2)]))
 
     #Adds to a constant.
     def add_i_instruction(self, destination, ad1, const):

@@ -25,10 +25,9 @@ class Memory:
             
             
 #TO DO:
-#Check to see if we can convert from int to str everywhere to eliminate need to convert.
-#Need to test to see which is subtracted from which.
 #Need to make default data input and instruction input more robust
 #Need to make sure to fully understand alu and comment accordingly
 #need to unit test
+#Need to make subtraction skip if number is less than
 #remove DS_Store and final checks 
 #Publish

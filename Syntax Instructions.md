@@ -34,7 +34,7 @@ Working Example:
 
 `SUB,R5,R1,R2`
 
-This will subtract register 2 from register 1 and store the result at register 5. (Please Note: The first input MUST be larger than the second for an accurate calculation. There are only registers 1-7, you will need to save any more results to memory.)
+This will subtract register 2 from register 1 and store the result at register 5. [R1 - R2 = R5] (Please Note: The first input MUST be larger than the second for an accurate calculation. There are only registers 1-7, you will need to save any more results to memory.)
 
 ### Multiply
 
