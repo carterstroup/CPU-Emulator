@@ -1,6 +1,6 @@
 from cache import Cache
 from memory import Memory
-from alu import ALU as alu
+from ALU import ALU as alu
 
 CPU_COUNTER_INIT_VALUE = 0
 NUMBER_OF_REGISTERS = 9
