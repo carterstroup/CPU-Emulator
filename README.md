@@ -3,6 +3,8 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/carterstroup/Netflix-Recommendation/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
 
+**Note:** This project was completed during my Codecademy Computer Science Certification and is built upon the provided code here: [https://github.com/VTickner/codecademy-cpu-simulator](https://github.com/VTickner/codecademy-cpu-simulator).
+
 ## Features
 
 - Emulates essential CPU and computer functions including Cache, Memory Busses, Control Unit, and a Arithmetic Logic Unit.
